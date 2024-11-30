@@ -9,6 +9,10 @@ class Profilescreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: ColorConstants.white,
       appBar: AppBar(
+        title: Text(
+          "profile",
+          style: TextStyle(fontWeight: FontWeight.w500),
+        ),
         actions: [Icon(Icons.more_vert)],
       ),
       body: Padding(

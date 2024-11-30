@@ -49,4 +49,21 @@ class NewsScreenController with ChangeNotifier {
     isCategoryLoading = false;
     notifyListeners();
   }
+
+  Future<List<News>> searchNews(String query) async {
+    List<News> searchResults = [];
+    final url = Uri.parse(
+        "https://newsapi.org/v2/everything?q=$query&apiKey=26c0f3c1f9dd4a49a1d7b13195d00e67");
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        NewsScreenModel newsScreenRes = newsScreenModelFromJson(response.body);
+        searchResults = newsScreenRes.articles ?? [];
+      }
+    } catch (e) {}
+
+    return searchResults;
+  }
 }

@@ -3,6 +3,8 @@ import 'package:news_app/controller/homescreencontroller.dart';
 import 'package:news_app/utils/colorconstants.dart';
 import 'package:news_app/views/homescreen/widgets/latestnewscard.dart';
 import 'package:news_app/views/newsdetailsscreen/newsdetailsscreen.dart';
+import 'package:news_app/views/searchscreen/searchresultsscreen.dart';
+
 import 'package:provider/provider.dart';
 
 class Homescreen extends StatefulWidget {
@@ -31,6 +33,9 @@ class _HomescreenState extends State<Homescreen> {
       final controller = context.read<NewsScreenController>();
       controller.getData();
       controller.getcatdata(catlist[selectedCategoryIndex]);
+      controller.searchNews("test query").then((results) {
+        print("Test query results: ${results.length}");
+      });
     });
   }
 
@@ -86,19 +91,34 @@ class _HomescreenState extends State<Homescreen> {
                   ),
                   SizedBox(height: 10),
                   TextField(
+                    onSubmitted: (query) async {
+                      if (query.isNotEmpty) {
+                        final searchResults = await context
+                            .read<NewsScreenController>()
+                            .searchNews(query);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SearchResultsScreen(results: searchResults),
+                          ),
+                        );
+                      }
+                    },
                     decoration: InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.search,
-                          color: ColorConstants.grey,
-                        ),
-                        hintText: "Search for news",
-                        hintStyle: TextStyle(fontSize: 15, color: Colors.grey),
-                        suffixIcon: Icon(
-                          Icons.mic,
-                          color: ColorConstants.grey,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(vertical: 15)),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: ColorConstants.grey,
+                      ),
+                      hintText: "Search for news",
+                      hintStyle: TextStyle(fontSize: 15, color: Colors.grey),
+                      suffixIcon: Icon(
+                        Icons.mic,
+                        color: ColorConstants.grey,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(vertical: 15),
+                    ),
                   ),
                   SizedBox(
                     height: 10,
